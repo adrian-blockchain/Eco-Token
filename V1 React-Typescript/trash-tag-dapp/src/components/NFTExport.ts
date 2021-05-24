@@ -6,10 +6,10 @@ const client = new NFTStorage({token: apiKey})
 
 
 
-export const NFTExport =async (object: any) => {
+export const NFTExport =async (props: any) => {
 
 
-    const content = new Blob([object])
+    const content = new Blob([props])
 
     const cid = await client.storeBlob(content)
 
