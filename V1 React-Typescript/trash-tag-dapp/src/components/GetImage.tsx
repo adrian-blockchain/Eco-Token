@@ -1,7 +1,7 @@
-import React, {Component, SFC, useState} from "react";
+import React, {Component, ReactNode, SFC, useState} from "react";
 import EXIF from 'exif-js'
 import ipfs from "../ipfs";
-
+import NFTExport from "./NFTExport";
 
 import {type} from "os";
 import * as buffer from "buffer";
@@ -27,22 +27,110 @@ interface CoordinatedString {
 interface  PropsData {
     numberArray?: number[],
     stringArray?: string[],
-    ident: number,
+    ident?: number,
 }
 
 
-const GetDataForVerif =(props:PropsData)=>{
+
+
+
+
+const GetDataForVerif:React.FC<PropsData> =(props)=>{
 
     console.log(props)
-    if (typeof props.numberArray !== 'undefined'){
+    if (typeof props.numberArray !== 'undefined' && typeof props.stringArray !== 'undefined'){
         console.log(props.numberArray[2])
-        return <div><h4>Bg t'as upload</h4></div>
+        const numberArray:number[] = props.numberArray;
+        const stringArray:string[] = props.stringArray;
 
+        const verify =(event:any) => {
+            event.preventDefault()
+            const file2 = event.target.files[0]
+
+            if (file2 && file2.name) {
+                EXIF.getData(file2, function () {
+                    let exifData2 = EXIF.pretty(file2)
+
+                    if (exifData2) {
+
+                        try {
+                            const allMetaData = EXIF.getAllTags(file2);
+                            if (allMetaData.GPSLongitude[0].numerator / allMetaData.GPSLongitude[0].denominator === numberArray[0]
+                                && allMetaData.GPSLongitude[1].numerator / allMetaData.GPSLongitude[1].denominator === numberArray[1]
+                                && allMetaData.GPSLongitude[2].numerator / allMetaData.GPSLongitude[2].denominator === numberArray[2] //add a tolerance
+                                && allMetaData.GPSLongitudeRef === stringArray[0]
+                                && allMetaData.GPSLatitude[0].numerator / allMetaData.GPSLatitude[0].denominator === numberArray[3]
+                                && allMetaData.GPSLatitude[1].numerator / allMetaData.GPSLatitude[1].denominator === numberArray[4]
+                                && allMetaData.GPSLatitude[2].numerator / allMetaData.GPSLatitude[2].denominator == numberArray[5] //Add a tolerance
+                                && allMetaData.GPSLatitudeRef === stringArray[1]
+                                && allMetaData.GPSImgDirection.numerator / allMetaData.GPSImgDirection.denominator === numberArray[6]) {
+                                console.log("C'est les memes BG")
+
+                                var fs = require('fs')
+                                var data = {
+                                    img1:{
+                                        GPSLongitudeDegrees: numberArray[0],
+                                        GPSLongitudeMinutes: numberArray[1],
+                                        GPSLongitudeSeconds: numberArray[2],
+                                        GPSLongitudeRef: stringArray[0],
+                                        GPSLatitudeDegrees: numberArray[3],
+                                        GPSLatitudeMinutes: numberArray[4],
+                                        GPSLatitudeSeconds: numberArray[5],
+                                        GPSLatitudeRef: stringArray[1],
+                                        GPSImgDirection: numberArray[6],
+                                        DateTime: stringArray[2]
+                                    },
+                                    img2:{
+                                        GPSLongitudeDegrees: allMetaData.GPSLongitude[0].numerator / allMetaData.GPSLongitude[0].denominator,
+                                        GPSLongitudeMinutes: allMetaData.GPSLongitude[1].numerator / allMetaData.GPSLongitude[1].denominator,
+                                        GPSLongitudeSeconds: allMetaData.GPSLongitude[2].numerator / allMetaData.GPSLongitude[2].denominator,
+                                        GPSLongitudeRef: allMetaData.GPSLongitudeRef,
+                                        GPSLatitudeDegrees: allMetaData.GPSLatitude[0].numerator / allMetaData.GPSLatitude[0].denominator,
+                                        GPSLatitudeMinutes: allMetaData.GPSLatitude[1].numerator / allMetaData.GPSLatitude[1].denominator,
+                                        GPSLatitudeSeconds: allMetaData.GPSLatitude[2].numerator / allMetaData.GPSLatitude[2].denominator,
+                                        GPSLatitudeRef: allMetaData.GPSLatitudeRef,
+                                        GPSImgDirection: allMetaData.GPSImgDirection.numerator / allMetaData.GPSImgDirection.denominator,
+                                        DateTime: allMetaData.DateTime
+
+                                    }
+                                }
+                                console.log('object created')
+
+                                NFTExport(data)
+
+
+
+
+
+
+
+
+                            }
+
+
+                        } catch (error) {
+                            console.log(error)
+                        }
+
+
+                    }
+
+
+                })
+            }
+
+        }
+        return (<div>
+                <h4>Upload your <strong>Second</strong>image</h4>
+                <input type="file" onChange={verify}/>
+            </div>
+        )
     }
     else {
 
-        return <div><h4>Put your first image</h4></div>
+        return( <div><h4>Put your first image</h4></div>)
     }
+    return null;
 
 }
 
