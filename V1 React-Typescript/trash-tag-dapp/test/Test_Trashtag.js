@@ -16,20 +16,23 @@ contract("Trashtag", async accounts =>{
         const account_user = accounts[1];
         //Mint 100 ERC20 and 1 NFT
         await instance.approve(account_user, {from:accounts[0]});
-        await instance.mint(uri,{from:account_user})
+        await instance.mint(uri,{from:account_user});
 
 
         //Get Balance and id NFT
         const amountNFT = await instance.getAmountNFT.call(account_user);
+        console.log("id token: ",amountNFT);
         assert.equal(amountNFT, 1, "NFT ID not correct");
 
 
         //Check Balance coin
         const amountCoin = await instance.getBalanceCoin.call(account_user);
+        console.log("Amount coin: ",amountCoin);
         assert.equal(amountCoin, 100, "Amount coin is not correct");
 
         //Check URI of the token
-        let tokenURI = await instance.getURI(amountNFT, {from:account_user});
+        const tokenURI = await instance.getURI.call(amountNFT, {from:account_user});
+        console.log("token uri :", tokenURI);
         assert.equal(tokenURI, uri, "URI's are not identical");
 
     })
@@ -37,7 +40,7 @@ contract("Trashtag", async accounts =>{
     it("Should mint 100Coins and send it to addr2", async ()=>{
         const instance = await Trashtag.deployed();
         const newUri = "Random URI"
-        const oldUri = "not yours anymore";
+
 
         const admin = accounts[0]
         const addr1 = accounts[1];
@@ -46,7 +49,7 @@ contract("Trashtag", async accounts =>{
         await instance.approve(addr1, {from:admin});
         await instance.mint(newUri,{from:addr1});
 
-        await instance.sendCoin(addr2, 100,{from: addr1});
+        await instance.sendCoin.call(addr2, 100,{from: addr1});
 
 
         //Balance each addr
@@ -57,20 +60,20 @@ contract("Trashtag", async accounts =>{
         assert.equal(balanceAddr2,100, "should be equal to 100");
     })
 
-    it("Should mint 100Coins and send it to addr2", async ()=>{
+    it("Should mint 1NFT, send it to addr2, check balances and URIs", async ()=>{
         const instance = await Trashtag.deployed();
         const newUri = "Random URI";
         const oldUri = "not yours anymore";
 
-        const admin = accounts[0]
-        const addr1 = accounts[1];
-        const addr2 = accounts[2]
+        const admin = accounts[0];
+        const addr1 = accounts[4];
+        const addr2 = accounts[5];
         //Mint 100 ERC20 (and 1 NFT)
         await instance.approve(addr1, {from:admin});
         await instance.mint(newUri,{from:addr1});
 
         const idToken = await instance.getAmountNFT(addr1);
-        await instance.sendToken(addr2, idToken,{from: addr1});
+        await instance.SendToken(addr2, idToken,{from: addr1});
 
 
         //Balance each addr
