@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 
-
 import './Navbar/Navbar.css';
+
 
 export const Navbar =({account}:{account:string})=>{
     const [clicked, setClicked] = useState<boolean>(false)
@@ -44,6 +44,8 @@ export const Navbar =({account}:{account:string})=>{
                         {account}
                     </a>
                 </li>
+
+
 
 
             </ul>

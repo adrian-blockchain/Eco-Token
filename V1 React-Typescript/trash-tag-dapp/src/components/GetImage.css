@@ -1,6 +1,12 @@
 img{
     height: 100px;
     width: 100px;
+    text-align: center;
+    margin-left: 20px;
+}
+
+body{
+    display: block;
 }
 
 img[src="`https://ipfs.io/ipfs/"]{

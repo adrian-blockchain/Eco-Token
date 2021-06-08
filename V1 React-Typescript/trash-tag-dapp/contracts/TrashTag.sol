@@ -16,7 +16,7 @@ contract TrashTag is ERC1155{
     mapping(address => mapping(uint256 => string)) tokenURI;
     mapping(address => User) users;
 
-    string constant private baseMetadataURI = "ipfs://";
+    string constant private baseMetadataURI = "https://ipfs.io/ipfs/";
 
     struct User{
         uint NFTAmount;
@@ -46,32 +46,56 @@ contract TrashTag is ERC1155{
 
 
     //Only governance is able to approved a receiver
-    function approve(address _to)public governance {
+    function Approve(address _to)public governance {
         users[_to].approved = true;
     }
 
-    function mint(string calldata _uri)public Approved(msg.sender){
+    function Mint(string calldata _uri, address _to)public Approved(_to){
 
         //id 0 is for the coin, so NFT's id start at 1
-        users[msg.sender].NFTAmount ++;
+        users[_to].NFTAmount ++;
 
         //Id's of toeken is determined by the amount store in struct
-        uint id = users[msg.sender].NFTAmount;
+        uint id = users[_to].NFTAmount;
 
-        tokenURI[msg.sender][id] = _uri;
+        tokenURI[_to][id] = _uri;
 
-        _mint(msg.sender, id, 1, ""); //NFT
-        _mint(msg.sender, 0, amountReward, ""); //Crypto
+        _mint(_to, id, 1, ""); //NFT
+        _mint(_to, 0, amountReward, ""); //Crypto
 
 
         //Next token need to be approved again
-        users[msg.sender].approved = false;
+        users[_to].approved = false;
     }
+
+    function MintForTest(string calldata _uri, address _to)public{
+
+        //id 0 is for the coin, so NFT's id start at 1
+        users[_to].NFTAmount ++;
+
+        //Id's of toeken is determined by the amount store in struct
+        uint id = users[_to].NFTAmount;
+
+        tokenURI[_to][id] = _uri;
+
+        _mint(_to, id, 1, ""); //NFT
+        _mint(_to, 0, amountReward, ""); //Crypto
+
+
+        //Next token need to be approved again
+        //users[_to].approved = false;
+    }
+
+
 
 
     function setAmountReward(uint _newAmount)private governance{
         amountReward = _newAmount;
     }
+
+
+
+
 
 
     function SendToken(address _to,uint _id) public{

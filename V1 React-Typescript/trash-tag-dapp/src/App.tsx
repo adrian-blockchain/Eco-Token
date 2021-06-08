@@ -4,26 +4,35 @@ import logo from './logo.svg';
 import './App.css';
 import {GetImage} from './components/GetImage'
 import {Navbar } from './components/Navbar';
-import TrashTag from "./build/contracts/TrashTag.json";
+import TrashTag from './build/contracts/TrashTag.json'
 
 declare const window: any;
 function App() {
-  const [account, setAccount] = useState('')
+  let  [set, setSet] = useState<boolean>(true);
+  const [account, setAccount] = useState<string>('')
+  const [contract, setContract] = useState<any>()
+  const [amountCoin, setAmountCoin] = useState<number>(0)
+
+
 
   const componentWillAmount = async ()=>{
-    await loadWeb3();
-    await loadBlockchaindata();
+    if (set == true){
+      await loadWeb3();
+      await loadBlockchaindata()
+      setSet(false)
+
+    }
+
   }
 
 
   const loadWeb3 = async ()=> {
     if (window.ethereum) {
-      console.log("ethereum")
+    console.log("Window ethereum")
       window.web3 = new Web3(window.ethereum)
       await window.ethereum.enable()
     } else if (window.web3) {
       console.log("Web 3")
-
       window.web3 = new Web3(window.web3.currentProvider)
     } else {
       window.alert('No blockchain wallet detected, download metamask')
@@ -36,9 +45,24 @@ function App() {
       const accounts = await web3.eth.getAccounts()
       setAccount(accounts[0]);
       console.log(account)
+      const networkId = await web3.eth.net.getId()
 
-      const abi =TrashTag.abi;
-      const contract =new web3.eth.Contract(abi)
+      // @ts-ignore
+      const networkData:any = TrashTag.networks[networkId]
+
+      console.log(networkData)
+      if (networkData){
+        const abi =TrashTag.abi;
+        const Contract =new web3.eth.Contract(abi, networkData.address)
+        setContract(Contract)
+        console.log(contract)
+
+
+      }
+      else {
+        window.alert('Contract is not deployed on a detected network')
+      }
+
 
     }
     componentWillAmount();
@@ -51,8 +75,11 @@ function App() {
       <Navbar account={account} />
     <br/>
       <h1>Trash-Tag Dapp</h1>
+
 <br/>
-        <GetImage />
+        <GetImage account={account} contract={contract}/>
+
+
     </div>
   );
 }
