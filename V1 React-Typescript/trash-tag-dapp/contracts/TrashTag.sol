@@ -115,6 +115,8 @@ contract TrashTag is ERC1155{
         tokenURI[msg.sender][_id] = "not yours anymore";
     }
 
+
+
     function sendCoin(address _to,uint amount) public{
         require(balanceOf(msg.sender,0)<= amount);
 
@@ -161,6 +163,11 @@ contract TrashTag is ERC1155{
             baseMetadataURI,
             hashURI
         );
+    }
+
+    function getURItest(uint _tokenId)public view returns(string memory){
+        string memory hashURI = tokenURI[msg.sender][_tokenId];
+        return hashURI;
     }
 
     function getAdmin()public view returns(address){

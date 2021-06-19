@@ -19,6 +19,8 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
     let [MetaDataImg1, setMetaDataImg1] = useState<any>()
     let [MetaDataImg2, setMetaDataImg2] = useState<any>()
 
+    let [debuging, setDebuging] = useState<boolean>(false)
+
 
     let verif:boolean = false;
 
@@ -105,8 +107,12 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
                     setLoading(+1)
                     console.log(result)
                     console.log(loading)
+                    if (result[0].hash !== undefined){
+                        await setImgHash(prevState => [...prevState, result[0].hash])
 
-                    await setImgHash(prevState => [...prevState, result[0].hash])
+                    }
+
+
 
                     if (error) {
                         console.log(error)
@@ -141,30 +147,21 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
         event.preventDefault()
         console.log("On submit")
 
-
+        if (MetaDataImg1 !== undefined && MetaDataImg2 !==undefined )
         verif = verification(MetaDataImg1,MetaDataImg2)
         console.log(verif)
         if (verif === true) {
-            console.log("Img 1")
 
-            const img1Hash = await ImgOnIpfs(img1);
+            await ImgOnIpfs(img1);
 
-
-            console.log("Img2")
             await ImgOnIpfs(img2);
-            console.log(loading)
 
+            return <div>Loading...</div>
+            setDebuging(false)
 
-
-
-            console.log("après if")
         }
         else {
-            return(
-                <div>
-                    <h3> Your trashtag is not valid</h3>
-                </div>
-            )
+            setDebuging(true)
         }
 
     }
@@ -181,7 +178,8 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
             <input type='file' onChange={captureImg2} className="inputImg"/>
             <input type='submit' value="Validate"/>
         </form>
-        {imgHash[1]==undefined ? <div id="loader" className="text-center mt-5"><p>Loading...</p></div>
+        {debuging == true ? <div><h5>Your images are invalid</h5></div> : <div></div>}
+        {imgHash[1]==undefined ? <div id="loader" className="text-center mt-5"></div>
         :
             <div>
                 <img src={`https://ipfs.io/ipfs/${imgHash[0]}`} alt="" className="trashimg" />

@@ -1,14 +1,45 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import YourTrashTag from './components/YourTrashTag'
 import reportWebVitals from './reportWebVitals';
+import {BrowserRouter as Router, Link, Route} from "react-router-dom";
+import Verificators from "./components/Verificators";
+import './components/Navbar/Navbar.css'
 
+
+
+
+
+// @ts-ignore
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <Router>
+        <div>
+            <nav className="NavbarItems">
+                <div className="menu-icon" >
+                    <i className='fas fa-times'></i>
+                </div>
+                <ul  className='nav-menu active'>
+                    <li><Link to="/" className="nav-links">Participation</Link> </li>
+                    <li><Link to="/myTrashtag" className="nav-links">My Trashtags</Link></li>
+                    <li><Link to="/verificators" className="nav-links">Verificators</Link></li>
+                </ul>
+            </nav>
+
+            <main>
+                <Route exact path="/" component={App}/>
+                <Route path="/mytrashtag" component={YourTrashTag}/>
+                <Route path="/verificators" component={Verificators}/>
+            </main>
+
+        </div>
+    </Router>
+
+
+
+
+    ,document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -5,6 +5,10 @@ import './App.css';
 import {GetImage} from './components/GetImage'
 import {Navbar } from './components/Navbar';
 import TrashTag from './build/contracts/TrashTag.json'
+import {ErrorBoundary} from "./components/ErrorBoundary";
+import {BrowserRouter as Router, Link, Route} from "react-router-dom";
+import YourTrashTag from "./components/YourTrashTag";
+import Verificators from "./components/Verificators";
 
 declare const window: any;
 function App() {
@@ -28,7 +32,7 @@ function App() {
 
   const loadWeb3 = async ()=> {
     if (window.ethereum) {
-    console.log("Window ethereum")
+
       window.web3 = new Web3(window.ethereum)
       await window.ethereum.enable()
     } else if (window.web3) {
@@ -71,16 +75,20 @@ function App() {
 
 
   return (
+
     <div className="App">
       <Navbar account={account} />
-    <br/>
+      <br/>
       <h1>Trash-Tag Dapp</h1>
 
-<br/>
-        <GetImage account={account} contract={contract}/>
+      <br/>
 
+      <ErrorBoundary>
+      <GetImage account={account} contract={contract}/>
+      </ErrorBoundary>
 
     </div>
+
   );
 }
 
