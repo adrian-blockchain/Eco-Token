@@ -1,10 +1,12 @@
+// @ts-ignore
 import React, {useState} from 'react';
 import Web3 from "web3";
 import logo from './logo.svg';
 import './App.css';
 import {GetImage} from './components/GetImage'
 import {Navbar } from './components/Navbar';
-import TrashTag from './build/contracts/TrashTag.json'
+// @ts-ignore
+import TrashTag from '../src/build/contracts/TrashTag.json'
 import {ErrorBoundary} from "./components/ErrorBoundary";
 import {BrowserRouter as Router, Link, Route} from "react-router-dom";
 import YourTrashTag from "./components/YourTrashTag";

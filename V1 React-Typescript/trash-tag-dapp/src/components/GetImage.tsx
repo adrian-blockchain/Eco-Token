@@ -1,4 +1,6 @@
-import React, {ReactNode, SFC, useState} from "react";
+// @ts-ignore
+import React, { useState} from "react";
+// @ts-ignore
 import EXIF from 'exif-js'
 import ipfs from "../ipfs";
 import MetadataExport from "./metadataExport";
@@ -125,14 +127,7 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
 
     }
 
-    function wait(ms:number){
-        var d:any = new Date();
-        var d2:any = null;
-        do {
-            d2= new Date();}
-        while (d2-d< ms)
 
-    }
 
     const validateNFT=async ()=>{
         const uri:string = await MetadataExport(MetaDataImg1, MetaDataImg2, imgHash[0], imgHash[1] )

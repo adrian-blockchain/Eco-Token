@@ -1,3 +1,4 @@
+import React from "react";
 
 export const Verificators = ()=>{
     return(<div>

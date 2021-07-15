@@ -1,59 +1,62 @@
+// @ts-ignore
 import Web3 from "web3";
-import TrashTag from "../build/contracts/TrashTag.json"
+
+// @ts-ignore
+import TrashTag from "../build/contracts/TrashTag.json";
+// @ts-ignore
 import React, {useEffect, useState} from "react";
-import TrashTagRendering from "./TrashTagRendering";
+import TrashTagRendering from "./TrashatagRendering";
+import Card from "./Card";
 
 declare const window: any;
+
+
+
+
+
+
 export const YourTrashTag = ()=> {
 
-
-    const [amountNFT, setAmountNFT] = useState<number>()
     let [loading, setLoading] = useState<boolean>(true);
     const [account, setAccount] = useState<string>('')
     const [contract, setContract] = useState<any>()
+    const [amountNFT, setAmountNFT] = useState<number>(0)
+    const [cids, setCid] = useState<string[]>([])
 
 
-    const ViewNFT = ()=> {
-        try {
-            const view = async ()=>{
-                const AmountNFT: number = await contract.methods.getAmountNFT(account).call({from: account})
-                setAmountNFT(AmountNFT)
-                console.log(AmountNFT)
+    const ViewNFT = async () => {
 
-                let i: number;
-                let uris: string[] = []
-                console.log("Avant boucle")
+        const AmountNFT: number = await contract.methods.getAmountNFT(account).call({from: account})
+        setAmountNFT(AmountNFT)
+        console.log(AmountNFT)
 
+        let i: number;
+        const data:any = []
 
-                for (i = 1; i <= AmountNFT; i++) {
-                    let cid = contract.methods.getURI(i).call(
-                        {from: account})
-                    // @ts-ignore
-                    uris.push(cid)
-                }
-                console.log("Après boucle")
+        console.log("Avant boucle")
 
 
-            }
-            view()
-
-
-        } catch (e) {
-            console.log(e)
+        for (i = 1; i <= AmountNFT; i++) {
+            //Localisation of the metadatas stored in the NFT
+            let cid = await contract.methods.getURItest(i).call({from: account})
+            data.push(cid)
         }
-        return null;
+        console.log(data)
+        setCid(data)
+
+
 
     }
 
 
-
-
     const componentWillAmount = async () => {
-
-        if (loading == true){
+        if (loading == true) {
             await loadWeb3();
-            await loadBlockchaindata()
+            await loadBlockchaindata();
             setLoading(false)
+            if (contract != undefined){
+                await ViewNFT();
+            }
 
         }
     }
@@ -61,7 +64,6 @@ export const YourTrashTag = ()=> {
 
     const loadWeb3 = async () => {
         if (window.ethereum) {
-
             window.web3 = new Web3(window.ethereum)
             await window.ethereum.enable()
         } else if (window.web3) {
@@ -71,9 +73,11 @@ export const YourTrashTag = ()=> {
             window.alert('No blockchain wallet detected, download metamask')
         }
     }
+
+
     const loadBlockchaindata = async () => {
         const web3 = window.web3;
-        let stop:boolean = false;
+
 
         //Load account
         const accounts = await web3.eth.getAccounts()
@@ -98,23 +102,29 @@ export const YourTrashTag = ()=> {
     componentWillAmount();
 
 
+    // @ts-ignore
+    // @ts-ignore
+    return <div>
+        {contract == undefined ? <div id="loader" className="text-center mt-5"><p>Loading</p></div>
+            :
+            <div>
 
-            return <div>
-                {contract == undefined ?  <div id="loader" className="text-center mt-5"><p>Loading...</p></div>
+                {amountNFT == 0 ? <div><h2>You did not participate to a trashtag Challenge yet</h2></div>
                     :
                     <div>
-                    <h2>Amount of trashtag NFT:{amountNFT}</h2>
-
-                    <ViewNFT/>
-
-
+                        <h2>Amount of trashtag NFT:{amountNFT}</h2>
+                        <ul>
+                            {
+                                cids.map(item =>(
+                                    <Card cid={item}/>
+                                ))
+                            }
+                        </ul>
                     </div>
-
-
-                }</div>
-
-
-
+                }
+            </div>
+        }
+    </div>
 }
 
 

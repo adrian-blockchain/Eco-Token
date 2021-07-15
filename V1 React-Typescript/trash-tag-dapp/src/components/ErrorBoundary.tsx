@@ -1,4 +1,6 @@
+import React from "react";
 import {Component} from "react";
+
 
 export class ErrorBoundary extends Component<any, any>{
     constructor(props:any) {
@@ -19,7 +21,7 @@ export class ErrorBoundary extends Component<any, any>{
     // @ts-ignore
     render() {
         if (this.state.hasError){
-            return <h3>Something went wrong, have you activated gps localisation in your camera ?</h3>
+            return <div><h3>Something went wrong, have you activated gps localisation in your camera ?</h3></div>
 
         }
         return this.props.children

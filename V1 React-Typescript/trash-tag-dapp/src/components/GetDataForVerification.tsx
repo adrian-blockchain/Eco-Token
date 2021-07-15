@@ -1,7 +1,6 @@
+// @ts-ignore
 import React, {useState} from "react";
-import EXIF from "exif-js";
-import MetadataExport from "./metadataExport";
-import ipfs from "../ipfs";
+
 
 
 

@@ -1,7 +1,3 @@
-import EXIF from "exif-js";
-import React from "react";
-
-
 export const verification = (allMetaDataImg1:any, allMetaDataImg2:any):boolean=> {
 
     if (allMetaDataImg1.GPSLongitude !==undefined){
