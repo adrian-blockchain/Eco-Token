@@ -2,7 +2,7 @@
 import Web3 from "web3";
 
 // @ts-ignore
-import TrashTag from "../build/contracts/TrashTag.json";
+import TrashTag from "../build/contracts/TrashtagDAPP.json";
 // @ts-ignore
 import React, {useEffect, useState} from "react";
 import TrashTagRendering from "./TrashatagRendering";
@@ -38,7 +38,7 @@ export const YourTrashTag = ()=> {
 
         for (i = 1; i <= AmountNFT; i++) {
             //Localisation of the metadatas stored in the NFT
-            let cid = await contract.methods.getURItest(i).call({from: account})
+            let cid = await contract.methods.getURI(i).call({from: account})
             data.push(cid)
         }
         console.log(data)

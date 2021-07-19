@@ -6,7 +6,7 @@ import './App.css';
 import {GetImage} from './components/GetImage'
 import {Navbar } from './components/Navbar';
 // @ts-ignore
-import TrashTag from '../src/build/contracts/TrashTag.json'
+import TrashTag from '../src/build/contracts/TrashtagDAPP.json'
 import {ErrorBoundary} from "./components/ErrorBoundary";
 import {BrowserRouter as Router, Link, Route} from "react-router-dom";
 import YourTrashTag from "./components/YourTrashTag";
