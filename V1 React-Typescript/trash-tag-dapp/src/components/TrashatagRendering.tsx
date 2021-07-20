@@ -4,19 +4,7 @@ import axios from "axios";
 import {Card} from "./Card";
 
 const TrashTagRendering = (contract:any, account:any) =>{
-    /*
-    let res: any = await axios.get(`https://ipfs.io/ipfs/${cid}`)
 
-    const updateArr =  {
-        id: i,
-        img1: res.data[0].ImgHash,
-        img2: res.data[1].ImgHash,
-        GPSLatitude: res.data[0].GPSLatitudeDegrees,
-        GPSLongitude: res.data[0].GPSLongitudeDegrees,
-        Date: res.data[0].DateTime
-    };
-
-     */
 
     const [amountNFT, setAmountNFT] = useState<number>(0)
     const [objs, setObjs] = useState<any>()
@@ -28,9 +16,6 @@ const TrashTagRendering = (contract:any, account:any) =>{
                 console.log(AmountNFT)
 
                 let i: number;
-
-                console.log("Avant boucle")
-
 
 
                 for (i = 1; i <= AmountNFT; i++) {

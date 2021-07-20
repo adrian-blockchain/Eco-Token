@@ -11,17 +11,25 @@ import GetDataForVerif from "./GetDataForVerification";
 import createNFT from "./createNFT";
 
 
+
 export const GetImage = ({account, contract}:{account:string, contract:any})=>{
+
+    /*
+    State load images and metadatas
+     */
     const [img1, setImg1] =useState<any>();
     const [img2, setImg2] = useState<any>();
     let [imgHash, setImgHash] = useState<string[]>([])
-    let [loading, setLoading] = useState<number>(0)
-
-
     let [MetaDataImg1, setMetaDataImg1] = useState<any>()
     let [MetaDataImg2, setMetaDataImg2] = useState<any>()
 
+    /*
+    Interface composent
+     */
     let [debuging, setDebuging] = useState<boolean>(false)
+    let [img1Done, setimg1Done] = useState<boolean>(false)
+    let [loading, setLoading] = useState<number>(0)
+    let [tokenCreated, setTokenCreated]= useState<boolean>(false)
 
 
     let verif:boolean = false;
@@ -31,34 +39,39 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
         event.preventDefault()
         const file1 = event.target.files[0]
         setImg1(file1);
+        setimg1Done(true)
 
 
         if (file1 && file1.name){
             EXIF.getData(file1, function (){
-                let exifDataImg1 = EXIF.pretty(file1)
-                if (exifDataImg1){
+                let exifDataImg1 = EXIF.pretty(file1);
+                if (exifDataImg1) {
                     try {
                         const allMetaDataImg1 = EXIF.getAllTags(file1)
                         setMetaDataImg1(allMetaDataImg1)
                         console.log(allMetaDataImg1)
-                        if (allMetaDataImg1.DateTime !== undefined){
+                        if (allMetaDataImg1.DateTime !== undefined) {
                             return (<div>
                                 <h3>Time : {allMetaDataImg1.DateTime}</h3>
                             </div>)
-                        }else {
-                            return <div><h3>Your pictures do not includes gps metadatas </h3></div>
                         }
+                        }catch (e){
+                            console.log(e)
 
-                    } catch (e) {
-                        console.log(e)
-
+                        }
                     }
                 }
-            })
+            )
+        }
+        else{
+            return <div><h3>Your pictures do not includes gps metadatas </h3></div>
+                }
+
         }
 
 
-    }
+
+
     const captureImg2 = (event:any) =>{
         console.log('image 2 deposed')
         event.preventDefault()
@@ -74,13 +87,14 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
                         const allMetaDataImg2 = EXIF.getAllTags(file2)
                         setMetaDataImg2(allMetaDataImg2)
                         console.log(allMetaDataImg2)
-                        if (allMetaDataImg2.DateTime !== undefined){
+                        if (allMetaDataImg2.DateTime !== undefined) {
                             return (<div>
                                 <h3>Time : {allMetaDataImg2.DateTime}</h3>
                             </div>)
                         }else {
-                            return <div><h3>Your pictures do not includes gps metadatas </h3></div>
-                        }
+                        return <div><h3>Your pictures do not includes gps metadatas </h3></div>
+                    }
+
 
 
                     } catch (e) {
@@ -98,34 +112,34 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
 
         const reader = new window.FileReader()
         reader.readAsArrayBuffer(img)
-        reader.onloadend = () =>{
+        reader.onloadend = () => {
             // @ts-ignore
-            if (typeof reader.result !== 'null'){
+            if (typeof reader.result !== 'null') {
                 // @ts-ignore
                 const buffer = new Buffer(reader.result)
 
-                ipfs.files.add(buffer, async (error:any, result:any)=> {
+                ipfs.files.add(buffer, async (error: any, result: any) => {
                     await result
                     setLoading(+1)
                     console.log(result)
                     console.log(loading)
-                    if (result[0].hash !== undefined){
+                    if (result[0].hash !== undefined) {
                         await setImgHash(prevState => [...prevState, result[0].hash])
 
                     }
-
 
 
                     if (error) {
                         console.log(error)
                         return
                     }
-            return result
+                    return result
                 })
             }
         }
-
     }
+
+
 
 
 
@@ -133,6 +147,7 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
         const uri:string = await MetadataExport(MetaDataImg1, MetaDataImg2, imgHash[0], imgHash[1] )
         await createNFT(account, contract, uri)
         console.log(`https://ipfs.io/ipfs/${uri}`)
+        setTokenCreated(true)
     }
 
 
@@ -153,41 +168,62 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
 
             return <div>Loading...</div>
             setDebuging(false)
-
         }
         else {
             setDebuging(true)
         }
-
     }
 
 
+    return (
+        <div>
+            { tokenCreated === true?
+                <div>
+                    <h3>Congrats !</h3>
+                    <ul>
+                        <li><p>You just receive 100 jobcoins</p></li>
+                        <li><p>You can see your trashtag on "My TrashTags"</p></li>
+                    </ul>
 
-    // @ts-ignore
-    // @ts-ignore
-    // @ts-ignore
-    return <div>
-        <h3>Upload your <strong>first</strong>picture</h3>
-        <form onSubmit={onSubmit}>
-            <input type='file' onChange={captureImg1} className="inputImg"/>
-            <input type='file' onChange={captureImg2} className="inputImg"/>
-            <input type='submit' value="Validate"/>
+                </div>
+                    :
+                <div>
+                    <form onSubmit={onSubmit}>
+                        <div className="input1">
+                            <label htmlFor="img1">The first picture</label>
+                            <input  type='file' id="img1" onChange={captureImg1}  />
+                        </div>
+
+
+
+                { img1Done == false ? <div></div>
+                :
+                <div className="input2">
+                    <label htmlFor="img2">The second picture</label>
+                    <input type='file' id="img2" onChange={captureImg2} />
+                    <br/>
+                    <input className="btn-validate" type='submit' value="Validate"/>
+                </div>
+            }
+
         </form>
+
         {debuging == true ? <div><h5>Your images are invalid</h5></div> : <div></div>}
-        {imgHash[1]==undefined ? <div id="loader" className="text-center mt-5"></div>
-        :
-            <div>
-                <img src={`https://ipfs.io/ipfs/${imgHash[0]}`} alt="" className="trashimg" />
-                <img src={`https://ipfs.io/ipfs/${imgHash[1]}`} alt="" className="trashimg"/>
-                <button onClick={validateNFT}>Validate your nft</button>
-            </div>
-        }
+            {imgHash[1] == undefined ? <div id="loader" className="text-center mt-5"></div>
+                :
+                <div className='container-rendering'>
+                    <img src={`https://ipfs.io/ipfs/${imgHash[0]}`} alt="" className="trash-img1"/>
+                    <img src={`https://ipfs.io/ipfs/${imgHash[1]}`} alt="" className="trash-img2"/>
+                    <button className="btn" onClick={validateNFT}>Validate your nft</button>
+                </div>
+            }
+                </div>
+            }
+        </div>
+    )
 
 
 
-
-
-    </div>
 }
 
 export default GetImage;

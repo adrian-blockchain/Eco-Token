@@ -112,7 +112,8 @@ export const YourTrashTag = ()=> {
                 {amountNFT == 0 ? <div><h2>You did not participate to a trashtag Challenge yet</h2></div>
                     :
                     <div>
-                        <h2>Amount of trashtag NFT:{amountNFT}</h2>
+                        <br/>
+                        <h2>Trashtag Token:{amountNFT}</h2>
                         <ul>
                             {
                                 cids.map(item =>(

@@ -1,15 +1,110 @@
-img{
+.container-imgrendering img{
     height: 100px;
     width: 100px;
     text-align: center;
     margin-left: 20px;
+    display: block;
+}
+
+.trashimg1{
+    display: block;
 }
 
 body{
-    display: block;
+    display: flex;
     text-align: center;
+    font-family: 'Arimo', sans-serif;
+
 }
 
-img[src="`https://ipfs.io/ipfs/"]{
+input[type="file"]{
     display: none;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
 }
+
+.container-input{
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+
+}
+
+
+label{
+    display: flex;
+    color: white;
+    height: 60px;
+    width: 250px;
+    background-color:#00DD7B ;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 20px;
+    justify-content: center;
+    position: center;
+
+    border-radius: 10px;
+
+    margin-top: 15px;
+    align-items: center;
+    font-family: 'Arimo', sans-serif;
+}
+.p{
+    margin-top: 15px;
+}
+
+
+
+.input2{
+    margin-top: 10%;
+}
+
+label:hover{
+    box-shadow:2px -2px  5px 0 rgba(0, 221, 123, 0.5 ),
+    -2px 2px  5px 0 rgba(140, 234, 121, 0.5);
+;
+}
+
+.btn {
+    text-decoration: none;
+
+    overflow: hidden;
+    font-size: 1.5rem;
+    position: relative;
+    padding: 10px 20px;
+    background: #005357;
+
+    font-size: 28px;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    transition: all 1s;
+    color: white;
+    border-radius: 30px;
+    border-color: white;
+
+    box-shadow: 0 0 0 0 rgba(0, 221, 123, 0.5 ), 0 0 0 0 rgba(140, 234, 121, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+
+.btn:hover{
+    transform: translate(0, -5px);
+    box-shadow: 10px -10px  25px 0 rgba(0, 221, 123, 0.5 ),
+    -10px 10px  25px 0 rgba(140, 234, 121, 0.5);
+
+}
+
+.btn-validate{
+    background: #005357;
+    border-radius: 10px;
+    color: white;
+    margin-top: 5%;
+
+    font-family: 'Arimo', sans-serif;
+    font-size: x-large;
+}
+

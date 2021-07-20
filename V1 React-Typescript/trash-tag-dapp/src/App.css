@@ -1,7 +1,29 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Arimo', sans-serif;
 
+
+.container-picture{
+  margin-top: 1%;
+}
+
+.container-picture p{
+  margin-bottom: 1%;
+}
+
+img{
+  margin-top: 5px;
+  max-width: 50%;
+  height: auto;
+}
+
+.logo{
+  margin-top: 5px;
+  width:40%;
+  height: auto;
+  margin-bottom: 2%;
+}
+
+.Button{
+  display: block;
+  margin-left:auto;
+  margin-right: auto;
+  margin-top: 10px;
 }

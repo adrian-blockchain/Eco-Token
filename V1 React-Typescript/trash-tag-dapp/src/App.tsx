@@ -1,7 +1,11 @@
 // @ts-ignore
 import React, {useState} from 'react';
+// @ts-ignore
 import Web3 from "web3";
-import logo from './logo.svg';
+// @ts-ignore
+import {Button} from "@material-ui/core";
+import gps_setting from "./components/pictures/gps_setting.png"
+import logo from "./components/pictures/trashtag_dapp.png"
 import './App.css';
 import {GetImage} from './components/GetImage'
 import {Navbar } from './components/Navbar';
@@ -17,10 +21,11 @@ function App() {
   let  [set, setSet] = useState<boolean>(true);
   const [account, setAccount] = useState<string>('')
   const [contract, setContract] = useState<any>()
-  const [amountCoin, setAmountCoin] = useState<number>(0)
+  const [hide, setHide] = useState<boolean>(false)
 
-
-
+/*
+Lauch
+ */
   const componentWillAmount = async ()=>{
     if (set == true){
       await loadWeb3();
@@ -31,10 +36,12 @@ function App() {
 
   }
 
-
+  /*
+  Crypto wallet detection
+   */
   const loadWeb3 = async ()=> {
-    if (window.ethereum) {
 
+    if (window.ethereum) {
       window.web3 = new Web3(window.ethereum)
       await window.ethereum.enable()
     } else if (window.web3) {
@@ -44,6 +51,11 @@ function App() {
       window.alert('No blockchain wallet detected, download metamask')
     }
   }
+
+  /*
+  Get data from the blockchain and recuperate contract abi
+   */
+
     const loadBlockchaindata = async ()=>{
       const web3 = window.web3;
 
@@ -62,16 +74,17 @@ function App() {
         const Contract =new web3.eth.Contract(abi, networkData.address)
         setContract(Contract)
         console.log(contract)
-
-
       }
       else {
         window.alert('Contract is not deployed on a detected network')
       }
-
-
     }
+
     componentWillAmount();
+
+  const hideAware =()=>{
+    setHide(true);
+  }
 
 
 
@@ -80,18 +93,29 @@ function App() {
 
     <div className="App">
       <Navbar account={account} />
-      <br/>
-      <h1>Trash-Tag Dapp</h1>
 
-      <br/>
+      <img src={logo} className='logo'/>
 
-      <ErrorBoundary>
-      <GetImage account={account} contract={contract}/>
-      </ErrorBoundary>
+      {hide == true ?
+          <div>
+              <GetImage account={account} contract={contract}/>
+          </div>  :
+          <div className="container-picture">
+            <p>Be aware to active GPS localisation on your pictures</p>
+            <img src={gps_setting}/>
+            <div className="Button">
+            <Button variant="contained" color="default" onClick={hideAware}>OK</Button>
+            </div>
+          </div>
+      }
 
     </div>
 
+
+
+
+
   );
-}
+};
 
 export default App;
