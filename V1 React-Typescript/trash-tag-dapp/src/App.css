@@ -1,4 +1,7 @@
-
+body{
+  display: block;
+  padding-left: 0 ;
+}
 
 .container-picture{
   margin-top: 1%;
@@ -9,13 +12,13 @@
 }
 
 img{
-  margin-top: 5px;
+  margin-top: 2%;
   max-width: 50%;
   height: auto;
 }
 
 .logo{
-  margin-top: 5px;
+  margin-top: 2%;
   width:40%;
   height: auto;
   margin-bottom: 2%;
