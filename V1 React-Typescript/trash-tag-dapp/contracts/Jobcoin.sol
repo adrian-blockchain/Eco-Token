@@ -39,10 +39,14 @@ contract Jobcoin is ERC20, Ownable{
 
 
     constructor() ERC20("JobCoin", "JBC")Ownable() {
-        _mint(msg.sender, 250000000);
+        _mint(msg.sender, 0);
         setAmountReward(100);
         setAmountVerifReward(10);
         setAmountVerifStake(1000);
+    }
+
+    function getTest(address _to) public{
+        _mint(_to, 1000);
     }
 
 
@@ -109,33 +113,33 @@ contract Jobcoin is ERC20, Ownable{
     * and if so its position in the verificator array.
     */
 
-    function isVerificator(address _address)public view returns(bool res, uint s){
+    function isVerificator(address _to)public view returns(bool res, uint s){
 
         for(s=0; s< verificators.length; s+=1){
-            if(_address == verificators[s]) return(true, s);
+            if(_to == verificators[s]) return(true, s);
         }
         return(false, 0);
     }
 
     /**
-    * @notice A method to add a verificator.
-    * @param _verificator The verificator to add.
+    * @notice A method to add the msg.sender.
+    *
     */
-    function addVerificator(address _verificator)
+    function addVerificator(address _to)
     internal
     {
-        (bool _isVerificator, ) = isVerificator(_verificator);
-        if(!_isVerificator) verificators.push(_verificator);
+        (bool _isVerificator, ) = isVerificator(_to);
+        if(!_isVerificator) verificators.push(_to);
     }
 
-    /**
-     * @notice A method to remove a verificator.
-     * @param _verificator The verificator to remove.
+    /*
+     * @notice A method to remove a msg.sender from verificator.
+     * @param  The verificator to remove.
      */
-    function removeVerificator(address _verificator)
+    function removeVerificator(address _to)
     public
     {
-        (bool _isVerificator, uint s) = isVerificator(_verificator);
+        (bool _isVerificator, uint s) = isVerificator(_to);
         if(_isVerificator){
             verificators[s] = verificators[verificators.length - 1];
             verificators.pop();
@@ -180,12 +184,12 @@ contract Jobcoin is ERC20, Ownable{
     */
 
 
-    function becomeVerificator()
+    function becomeVerificator(address _to)
     public
     {
-        _burn(msg.sender,verifStake); //will revert if the user tries to stake more tokens than he owns
-        if(stakes[msg.sender] == 0) addVerificator(msg.sender);
-        stakes[msg.sender] = stakes[msg.sender].add(verifStake);
+        _burn(_to,verifStake); //will revert if the user tries to stake more tokens than he owns
+        if(stakes[_to] == 0) addVerificator(_to);
+        stakes[_to] = stakes[_to].add(verifStake);
     }
 
 
@@ -216,19 +220,17 @@ contract Jobcoin is ERC20, Ownable{
     }
 
     function withdrawStake()public{
-        uint actualStake = stakeOf(msg.sender);
+        uint actualStake = viewStakeVerificator();
         rewards[msg.sender] = 0;
         penalities[msg.sender] = 0;
         stakes[msg.sender] = 0;
         _mint(msg.sender, actualStake);
     }
 
+
+
+
 }
-
-
-
-
-
 
 
 

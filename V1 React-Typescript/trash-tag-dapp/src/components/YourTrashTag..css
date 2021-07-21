@@ -1,0 +1,8 @@
+.address{
+    color: white;
+    background: linear-gradient(90deg, rgb(140,234,121)0%, rgba(0,221,123,1)100%);
+    margin-top: -7%;
+    margin-bottom: 5%;
+}
+
+.container{margin-top:6% }

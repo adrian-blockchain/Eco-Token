@@ -1,0 +1,36 @@
+.address{
+    color: white;
+    background: linear-gradient(90deg, rgb(140,234,121)0%, rgba(0,221,123,1)100%);
+    margin-top: -7%;
+    margin-bottom: 5%;
+}
+
+.container{
+    margin-top:6%
+}
+
+.btn {
+    text-decoration: none;
+
+    overflow: hidden;
+    font-size: 1.5rem;
+    position: relative;
+    padding: 10px 20px;
+    background: #005357;
+
+    font-size: 28px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    transition: all 1s;
+    color: white;
+    border-radius: 30px;
+    border-color: white;
+
+    box-shadow: 0 0 0 0 rgba(0, 221, 123, 0.5 ), 0 0 0 0 rgba(140, 234, 121, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.logo image{
+    margin-top: 20%;
+    width: auto;
+}

@@ -10,8 +10,18 @@ import "./Trashtag.sol";
 
 contract TrashtagDAPP is Jobcoin, Trashtag {
 
+    //Function for testnet
+    function GetForTest()public{
+        Jobcoin.getTest(msg.sender);
+    }
 
+    function becomeVerificator() public{
+        Jobcoin.becomeVerificator(msg.sender);
+    }
 
+    function withdraw() public{
+        Jobcoin.withdrawStake();
+    }
 
 
     function TrashtagWarriorReward(string calldata _uri, address _to)public{

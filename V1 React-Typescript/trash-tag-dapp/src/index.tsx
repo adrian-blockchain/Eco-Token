@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import {BrowserRouter as Router, Link, Route} from "react-router-dom";
 import Verificators from "./components/Verificators";
 import './components/Navbar/Navbar.css'
+import Jobcoin from "./components/Jobcoin";
 
 
 
@@ -24,6 +25,7 @@ ReactDOM.render(
                     <li><Link to="/" className="nav-links">Participation</Link> </li>
                     <li><Link to="/myTrashtag" className="nav-links">My Trashtags</Link></li>
                     <li><Link to="/verificators" className="nav-links">Verificators</Link></li>
+                    <li><Link to="/jobcoin" className="nav-links">Jobcoin</Link></li>
                 </ul>
             </nav>
 
@@ -31,6 +33,7 @@ ReactDOM.render(
                 <Route exact path="/" component={App}/>
                 <Route path="/mytrashtag" component={YourTrashTag}/>
                 <Route path="/verificators" component={Verificators}/>
+                <Route path="/jobcoin" component={Jobcoin}/>
             </main>
 
         </div>

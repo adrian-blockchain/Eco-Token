@@ -5,8 +5,9 @@ import Web3 from "web3";
 import TrashTag from "../build/contracts/TrashtagDAPP.json";
 // @ts-ignore
 import React, {useEffect, useState} from "react";
-import TrashTagRendering from "./TrashatagRendering";
+
 import Card from "./Card";
+import "./YourTrashTag..css";
 
 declare const window: any;
 
@@ -17,9 +18,12 @@ declare const window: any;
 
 export const YourTrashTag = ()=> {
 
-    let [loading, setLoading] = useState<boolean>(true);
+    // Blockchain States
     const [account, setAccount] = useState<string>('')
     const [contract, setContract] = useState<any>()
+
+    //App states
+    let [loading, setLoading] = useState<boolean>(true);
     const [amountNFT, setAmountNFT] = useState<number>(0)
     const [cids, setCid] = useState<string[]>([])
 
@@ -102,9 +106,10 @@ export const YourTrashTag = ()=> {
     componentWillAmount();
 
 
-    // @ts-ignore
-    // @ts-ignore
-    return <div>
+
+    return (<div className="container">
+        <div className="address">{account}</div>
+
         {contract == undefined ? <div id="loader" className="text-center mt-5"><p>Loading</p></div>
             :
             <div>
@@ -125,7 +130,7 @@ export const YourTrashTag = ()=> {
                 }
             </div>
         }
-    </div>
+    </div>)
 }
 
 

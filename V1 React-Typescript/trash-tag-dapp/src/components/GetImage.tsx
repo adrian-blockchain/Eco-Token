@@ -30,6 +30,7 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
     let [img1Done, setimg1Done] = useState<boolean>(false)
     let [loading, setLoading] = useState<number>(0)
     let [tokenCreated, setTokenCreated]= useState<boolean>(false)
+    let [click, setClick]=useState<boolean>(false)
 
 
     let verif:boolean = false;
@@ -126,7 +127,7 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
                     if (result[0].hash !== undefined) {
                         await setImgHash(prevState => [...prevState, result[0].hash])
 
-                    }
+                    }else return
 
 
                     if (error) {
@@ -148,6 +149,7 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
         await createNFT(account, contract, uri)
         console.log(`https://ipfs.io/ipfs/${uri}`)
         setTokenCreated(true)
+
     }
 
 
@@ -156,6 +158,7 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
     const onSubmit= async (event:any)=>{
         event.preventDefault()
         console.log("On submit")
+        setClick(true)
 
         if (MetaDataImg1 !== undefined && MetaDataImg2 !==undefined )
         verif = verification(MetaDataImg1,MetaDataImg2)
@@ -166,7 +169,6 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
 
             await ImgOnIpfs(img2);
 
-            return <div>Loading...</div>
             setDebuging(false)
         }
         else {
@@ -181,7 +183,9 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
                 <div>
                     <h3>Congrats !</h3>
                     <ul>
-                        <li><p>You just receive 100 jobcoins</p></li>
+                        <li><p>You just receive 100 jobcoins !</p>
+                        <p>To see it in your crypto wallet, add assets and enter "address JOBCOIN contract"</p>
+                        </li>
                         <li><p>You can see your trashtag on "My TrashTags"</p></li>
                     </ul>
 
@@ -202,7 +206,18 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
                     <label htmlFor="img2">The second picture</label>
                     <input type='file' id="img2" onChange={captureImg2} />
                     <br/>
-                    <input className="btn-validate" type='submit' value="Validate"/>
+                    {click != true ? <input className="btn-validate" type='submit' value="Validate"/>
+                        :
+                        <div>
+
+                        {imgHash[1] == undefined?
+                        <div><h3>Loading...</h3></div>
+                                :
+                                <div></div>
+                        }
+                        </div>
+                    }
+
                 </div>
             }
 
@@ -214,9 +229,9 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
                 <div className='container-rendering'>
                     <img src={`https://ipfs.io/ipfs/${imgHash[0]}`} alt="" className="trash-img1"/>
                     <img src={`https://ipfs.io/ipfs/${imgHash[1]}`} alt="" className="trash-img2"/>
-                    <button className="btn" onClick={validateNFT}>Validate your nft</button>
-                </div>
-            }
+                     <button className="btn" onClick={validateNFT}>Validate your nft</button>
+                </div>}
+
                 </div>
             }
         </div>
