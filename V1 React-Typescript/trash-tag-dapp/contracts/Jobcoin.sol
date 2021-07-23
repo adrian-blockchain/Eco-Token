@@ -45,6 +45,9 @@ contract Jobcoin is ERC20, Ownable{
         setAmountVerifStake(1000);
     }
 
+    /*
+    * To get jobcoin to test the dapp, only testnet function
+    */
     function getTest(address _to) public{
         _mint(_to, 1000);
     }
@@ -59,7 +62,8 @@ contract Jobcoin is ERC20, Ownable{
   *         TrashTag warriors rewards
   */
 
-    function rewardCoinTrashtagWarrior(address _to) public onlyOwner {
+    //This function will be an OnlyOwner in the production version
+    function rewardCoinTrashtagWarrior(address _to) public {
         _mint(_to, amountReward);
     }
 
@@ -194,15 +198,17 @@ contract Jobcoin is ERC20, Ownable{
 
 
 
-
-    function verificatorReward(address _verificator)public onlyOwner {
+    //OnlyOwner function for the mainnet
+    function verificatorReward(address _verificator)public  {
         (bool _isVerificator,) = isVerificator(_verificator);
         if(_isVerificator){
             rewards[_verificator]= rewards[_verificator].add(rewardVerificator);
         }
     }
 
-    function verificatorPenality(address _verificator)public onlyOwner {
+
+    //OnlyOwner function for the mainnet
+    function verificatorPenality(address _verificator)public {
         (bool _isVerificator, ) = isVerificator(_verificator);
         if(_isVerificator){
             penalities[_verificator]= penalities[_verificator].add(rewardVerificator.mul(2));
@@ -214,13 +220,12 @@ contract Jobcoin is ERC20, Ownable{
     function viewStakeVerificator()public view returns(uint){
         uint reward = rewards[msg.sender];
         uint penality = penalities[msg.sender];
-
         return stakes[msg.sender].add(reward).sub(penality);
-
     }
 
     function withdrawStake()public{
         uint actualStake = viewStakeVerificator();
+        removeVerificator(msg.sender);
         rewards[msg.sender] = 0;
         penalities[msg.sender] = 0;
         stakes[msg.sender] = 0;

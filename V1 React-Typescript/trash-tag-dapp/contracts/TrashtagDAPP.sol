@@ -15,27 +15,36 @@ contract TrashtagDAPP is Jobcoin, Trashtag {
         Jobcoin.getTest(msg.sender);
     }
 
+    /*
+   * Will burn 1000 Jobcoin from the user crypto wallet, and create a Stake of 1000 JBCStake
+*/
     function becomeVerificator() public{
         Jobcoin.becomeVerificator(msg.sender);
     }
+
 
     function withdraw() public{
         Jobcoin.withdrawStake();
     }
 
 
-    function TrashtagWarriorReward(string calldata _uri, address _to)public{
+    //OnlyOwner function for the mainnet
+    function TrashtagTokenCreation(string calldata _uri, address _to)public{
         Trashtag.rewardTrashtagWarrior(_uri, _to);
         Jobcoin.rewardCoinTrashtagWarrior(_to);
-
     }
 
-    function RewardVerificator(address _to)public onlyOwner{
+    //OnlyOwner function for the mainnet
+    // Add 10 JBCStake from verificator stake
+    function RewardVerificator(address _to)public {
         Jobcoin.verificatorReward(_to);
 
     }
 
-    function PenalityVerificator(address _to)public onlyOwner{
+
+    //OnlyOwner function for the mainnet
+    //Brun 20 JBCStake from verificators stakes
+    function PenalityVerificator(address _to)public {
         Jobcoin.verificatorPenality(_to);
     }
 

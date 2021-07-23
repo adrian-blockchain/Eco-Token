@@ -1,8 +1,10 @@
 import React, {useState} from "react";
 // @ts-ignore
 import Web3 from "web3";
+
 // @ts-ignore
 import TrashTag from "../build/contracts/TrashtagDAPP.json";
+import VerificatorJudgement from "./VerificatorJudgement";
 
 import "./Verificator.css";
 declare const window: any;
@@ -32,13 +34,17 @@ export const Verificators = ()=>{
         }
     }
 
-    const Destack = ()=>{
+    const Withdraw = ()=>{
 
         const withdraw = ()=>{
             const load = async ()=>{
                 await contract.methods.withdrawStake().send(
                     {from:account}
                 )
+                let ans = await contract.methods.isVerificator(account).call(
+                    {from: account}
+                )
+                console.log(ans)
                 setWait1(false)
 
             }
@@ -46,10 +52,12 @@ export const Verificators = ()=>{
         }
 
         return <div>
-            <button onClick={withdraw}>Withdraw your stake</button>
+            <button className="btn" onClick={withdraw}>Withdraw your stake</button>
         </div>
     }
     const Reload = ()=>{
+        window.location.reload();
+
         return (
             <div>
                 <h3>Reload the page to see changement</h3>
@@ -57,43 +65,48 @@ export const Verificators = ()=>{
         )
     }
 
-    const IsVerificator = async ()=>{
-        let res=await contract.methods.isVerificator().call(
+
+
+    const IsVerificator = async ()=> {
+        let ans = await contract.methods.isVerificator(account).call(
             {from: account}
         )
+        console.log(ans)
 
-        let bool:boolean = res[0];
 
-        if (bool ==false){
-            await setIsVerificator(false)
-        }else if (bool==true){
-            await setIsVerificator(true)
+        if (ans != null) {
+            let bool: boolean = ans[0];
+
+            //console.log(bool)
+
+            if (bool == false) {
+                await setIsVerificator(false)
+            } else if (bool == true) {
+                await setIsVerificator(true)
+            }
+        }else {
+            console.log(ans)
+
         }
     }
 
-
+    /*
+            Receive the amount stake from the blockchain abi
+             */
     const Stake = ()=>{
-
-        /*
-        Receive the amount stake from the blockchain abi
-         */
         const load= async ()=>{
             const value:number = await contract.methods.viewStakeVerificator().call(
                 {from:account}
             )
             setStake(value)
         }
-
         load()
-
-
         if (stake ==0){
             return(
             <div><h3>Loading...</h3></div>
             )
         }
         if (stake != undefined) {
-
             return (
 
                 <div className="stake">
@@ -108,16 +121,13 @@ export const Verificators = ()=>{
         }
     }
 
-    //tHIS ACTIOP
+    //Become verificator will stake 1000 Jobcoins on the verificator section
 
     const BecomeVerificator =()=> {
-
         const start = async ()=>{
             await contract.methods.becomeVerificator().send(
                 {from:account}
             )
-
-
             setWait(false)
         }
         start();
@@ -137,7 +147,9 @@ export const Verificators = ()=>{
     const loadWeb3 = async () => {
         if (window.ethereum) {
             window.web3 = new Web3(window.ethereum)
+            console.log(window.web3)
             await window.ethereum.enable()
+
         } else if (window.web3) {
             console.log("Web 3")
             window.web3 = new Web3(window.web3.currentProvider)
@@ -176,18 +188,23 @@ export const Verificators = ()=>{
     return(
         <div className="container" >
             <div className="address">{account}</div>
-        <h3>Verificators section</h3>
+            <div className="balance">
+            <h4>{balanceOf} JBC </h4>
+            </div>
+
+            <h2>Verificators section</h2>
         {contract == undefined? <div><h2>Loading...</h2></div>
             :
             <div>
                 {isVerificator == true ?
                     <div>
-                        <h2>Tinder ecologique</h2>
+
                         <Stake/>
+                        <VerificatorJudgement/>
 
 
                         {wait1== true ?
-                            <Destack/>
+                            <Withdraw/>
                             :
                             <Reload/>
                         }
@@ -201,7 +218,9 @@ export const Verificators = ()=>{
                             <div>
                                 {wait== true ?
                                     <div className="container-becomeVerificator">
-                                        <button onClick={BecomeVerificator}>Become verificator</button>
+                                        <h3>Human verification</h3>
+                                        <p>The purpose of verificators is to judge if an Trashtag challenge is valid or not</p>
+                                        <button className="btn" onClick={BecomeVerificator}>Become verificator</button>
                                     </div>
                                         :
                                     <Reload/>
@@ -213,7 +232,7 @@ export const Verificators = ()=>{
                             <div>
                                 <h2>You need to go get JOBCOIN </h2>
                                 <br/>
-                                <h3> It's a test version, you can go get JBC in the Jobcoin section</h3>
+                                <h3> It's a test version, you can go get JBC for free in the Jobcoin section</h3>
                             </div>
 
                         }
@@ -223,6 +242,6 @@ export const Verificators = ()=>{
         }
     </div>
     )
-}
+};
 
 export default Verificators;

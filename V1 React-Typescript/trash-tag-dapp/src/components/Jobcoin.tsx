@@ -27,7 +27,6 @@ export const Jobcoin =()=>{
                 await getSupply()
                 await getBalance()
             }
-
         }
     }
 
@@ -43,16 +42,15 @@ export const Jobcoin =()=>{
 
         }
         load();
-
     }
 
     const getJBC =()=>{
         const load = async ()=> {
             await contract.methods.GetForTest().send({from: account})
-            setWait(false);
+            setWait(false)
+
         }
         load()
-
     }
 
     const Reload = ()=>{
@@ -119,11 +117,13 @@ export const Jobcoin =()=>{
     return(
         <div className="container">
             <div className="address">{account}</div>
+            <div className="balance"><h4>{balance} JBC </h4></div>
             <img className="logo" src={JobCoin}/>
 
-            <h4>Supply of jobcoin: {supply}</h4>
+            <h4>Global supply of JobCoin: {supply}</h4>
             <br/>
-            <h4>Your balance of :{balance} </h4>
+
+
             <br/>
             {wait== true ?
                 <button className="btn" onClick={getJBC}>Get JBC for test</button>

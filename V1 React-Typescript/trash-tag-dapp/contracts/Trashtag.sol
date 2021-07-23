@@ -31,8 +31,8 @@ contract Trashtag is ERC1155, Jobcoin{
 
 
 
-
-    function rewardTrashtagWarrior(string memory _uri, address _to)public onlyOwner{
+//This function will be an OnlyOwner in the production version
+    function rewardTrashtagWarrior(string memory _uri, address _to)public {
 
 
         //id 0 is for the coin, so NFT's id start at 1

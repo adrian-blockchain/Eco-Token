@@ -1,0 +1,30 @@
+body{
+    display: grid;
+
+}
+
+
+.btn {
+    text-decoration: none;
+
+    overflow: hidden;
+    font-size: 1.5rem;
+    position: relative;
+    padding: 20px 20px;
+    background:linear-gradient(90deg, rgb(140,234,121)0%, rgba(0,221,123,1)100%); ;
+
+    font-size: 28px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    transition: all 1s;
+    color: black;
+    border-radius: 50%;
+    border-color: white;
+
+    box-shadow: 0 0 0 0 rgba(0, 221, 123, 0.5 ), 0 0 0 0 rgba(140, 234, 121, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.no{
+    margin-left: 10%;
+}

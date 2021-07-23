@@ -26,7 +26,7 @@ export const YourTrashTag = ()=> {
     let [loading, setLoading] = useState<boolean>(true);
     const [amountNFT, setAmountNFT] = useState<number>(0)
     const [cids, setCid] = useState<string[]>([])
-
+    let [balanceOf, setBalanceOf] = useState<number>()
 
     const ViewNFT = async () => {
 
@@ -60,9 +60,17 @@ export const YourTrashTag = ()=> {
             setLoading(false)
             if (contract != undefined){
                 await ViewNFT();
+                await amountJobcoin();
             }
 
         }
+    }
+
+
+    const amountJobcoin= async ()=> {
+        const balance:number = await contract.methods.balanceOf(account).call(
+            {from:account})
+        setBalanceOf(balance);
     }
 
 
@@ -109,6 +117,9 @@ export const YourTrashTag = ()=> {
 
     return (<div className="container">
         <div className="address">{account}</div>
+        <div className="balance">
+            <h4>{balanceOf} JBC </h4>
+        </div>
 
         {contract == undefined ? <div id="loader" className="text-center mt-5"><p>Loading</p></div>
             :

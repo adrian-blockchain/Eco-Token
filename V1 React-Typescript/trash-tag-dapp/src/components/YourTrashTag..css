@@ -2,7 +2,25 @@
     color: white;
     background: linear-gradient(90deg, rgb(140,234,121)0%, rgba(0,221,123,1)100%);
     margin-top: -7%;
-    margin-bottom: 5%;
+    margin-bottom: 1%;
 }
 
-.container{margin-top:6% }
+.container{
+    margin-top:1%
+}
+
+.balance{
+
+    margin-top: -5%;
+    background: linear-gradient(90deg, rgb(140,234,121)0%, rgba(0,221,123,1)100%);
+    color: white;
+    padding-top: 1px;
+    text-align: right;
+
+
+}
+.balance h4{
+
+    margin-right: 3%;
+    font-size: 1rem;
+}
