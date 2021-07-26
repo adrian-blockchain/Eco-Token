@@ -3,20 +3,12 @@ pragma solidity ^0.8.0;
 // SPDX-License-Identifier: MIT
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-
-import "./Strings.sol";
 import "./Jobcoin.sol";
 
 
 
 contract Trashtag is ERC1155, Jobcoin{
 
-
-
-    using Strings for string;
-
-    address private admin;
 
 
 
@@ -31,7 +23,7 @@ contract Trashtag is ERC1155, Jobcoin{
 
 
 
-//This function will be an OnlyOwner in the production version
+    //This function will be an OnlyOwner in the production version
     function rewardTrashtagWarrior(string memory _uri, address _to)public {
 
 
@@ -46,20 +38,6 @@ contract Trashtag is ERC1155, Jobcoin{
         _mint(_to, id, 1, ""); //NFT
 
     }
-
-
-
-
-    function SendToken(address _to,uint _id) public{
-        require(NFTAmount[msg.sender] >0, "You did not clean the world yet!");
-        uint id = NFTAmount[_to];
-        safeTransferFrom(msg.sender, _to, id, 1, "");
-        string memory uri =tokenURI[msg.sender][_id];
-        tokenURI[_to][id]= uri;
-        tokenURI[msg.sender][_id] = "not yours anymore";
-    }
-
-
 
 
 

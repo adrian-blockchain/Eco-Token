@@ -51,11 +51,6 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
                         const allMetaDataImg1 = EXIF.getAllTags(file1)
                         setMetaDataImg1(allMetaDataImg1)
                         console.log(allMetaDataImg1)
-                        if (allMetaDataImg1.DateTime !== undefined) {
-                            return (<div>
-                                <h3>Time : {allMetaDataImg1.DateTime}</h3>
-                            </div>)
-                        }
                         }catch (e){
                             console.log(e)
 
@@ -88,19 +83,8 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
                         const allMetaDataImg2 = EXIF.getAllTags(file2)
                         setMetaDataImg2(allMetaDataImg2)
                         console.log(allMetaDataImg2)
-                        if (allMetaDataImg2.DateTime !== undefined) {
-                            return (<div>
-                                <h3>Time : {allMetaDataImg2.DateTime}</h3>
-                            </div>)
-                        }else {
-                        return <div><h3>Your pictures do not includes gps metadatas </h3></div>
-                    }
-
-
-
                     } catch (e) {
                         console.log(e)
-
                     }
                 }
             })
@@ -160,6 +144,10 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
         console.log("On submit")
         setClick(true)
 
+        await ImgOnIpfs(img1);
+
+        await ImgOnIpfs(img2);
+        /*
         if (MetaDataImg1 !== undefined && MetaDataImg2 !==undefined )
         verif = verification(MetaDataImg1,MetaDataImg2)
         console.log(verif)
@@ -174,6 +162,8 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
         else {
             setDebuging(true)
         }
+
+         */
     }
 
 
@@ -223,7 +213,7 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
 
         </form>
 
-        {debuging == true ? <div><h5>Your images are invalid</h5></div> : <div></div>}
+        {debuging == true ? <div><h5>Your images are invalid, they do not include metadata</h5></div> : <div></div>}
             {imgHash[1] == undefined ? <div id="loader" className="text-center mt-5"></div>
                 :
                 <div className='container-rendering'>

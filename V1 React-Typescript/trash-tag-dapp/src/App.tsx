@@ -19,7 +19,9 @@ import Localisation from "./components/pictures/localisation.png"
 import Com from "./components/pictures/commaunautarian.png"
 import Watson from "./components/pictures/watson.png";
 
+
 declare const window: any;
+
 function App() {
   let  [set, setSet] = useState<boolean>(true);
   const [account, setAccount] = useState<string>('')
@@ -129,7 +131,8 @@ Lauch
       {hide == true ?
         <div>
         <GetImage account={account} contract={contract}/>
-        </div>  :
+        </div>
+          :
         <div className="notice">
         <div className="rules">
         <h2>Trashtag Warriors rules</h2>

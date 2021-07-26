@@ -31,48 +31,46 @@ contract Jobcoin is ERC20, Ownable{
     uint256 internal verifStake;
 
 
+
     address[] internal verificators;
     mapping(address=> uint256) internal stakes;
-    mapping(address=> uint256) internal rewards;
-    mapping(address=> uint256) internal penalities;
+
 
 
 
     constructor() ERC20("JobCoin", "JBC")Ownable() {
         _mint(msg.sender, 0);
-        setAmountReward(100);
-        setAmountVerifReward(10);
-        setAmountVerifStake(1000);
+        amountReward = 100;
+        rewardVerificator = 10;
+        verifStake = 1000;
     }
 
     /*
     * To get jobcoin to test the dapp, only testnet function
+    *Get 1000 JBC to test the Verificator section
     */
-    function getTest(address _to) public{
-        _mint(_to, 1000);
+    function GetForTest() public{
+        _mint(msg.sender, 1000);
     }
-
-
-
-
-
 
 
     /*
   *         TrashTag warriors rewards
   */
 
-    //This function will be an OnlyOwner in the production version
-    function rewardCoinTrashtagWarrior(address _to) public {
+    function rewardCoinTrashtagWarrior(address _to) internal {
         _mint(_to, amountReward);
     }
 
 
-
+    /*
+    Contract exceed 24KB, need to do saving
 
     function setAmountReward(uint _newAmount)public onlyOwner{
         amountReward = _newAmount;
     }
+    */
+
 
     function getAmountReward()public view returns(uint){
         return amountReward;
@@ -84,10 +82,14 @@ contract Jobcoin is ERC20, Ownable{
    *         Verificators rewards
    */
 
+    /*
+    Contract exceed 24KB, need to do saving
 
     function setAmountVerifReward(uint _newAmount)public onlyOwner{
         rewardVerificator = _newAmount;
     }
+    */
+
 
     function getAmountVerifReward()public view returns(uint){
         return rewardVerificator;
@@ -98,10 +100,13 @@ contract Jobcoin is ERC20, Ownable{
     *         Verificators inital stake
     */
 
+    /*
+    Contract exceed 24KB, need to do saving
 
     function setAmountVerifStake(uint _newAmount)public onlyOwner{
         verifStake = _newAmount;
     }
+    */
 
 
     function getAmountVerifStake()public view returns(uint){
@@ -117,7 +122,7 @@ contract Jobcoin is ERC20, Ownable{
     * and if so its position in the verificator array.
     */
 
-    function isVerificator(address _to)public view returns(bool res, uint s){
+    function isVerificator(address _to)internal view returns(bool res, uint s){
 
         for(s=0; s< verificators.length; s+=1){
             if(_to == verificators[s]) return(true, s);
@@ -141,7 +146,7 @@ contract Jobcoin is ERC20, Ownable{
      * @param  The verificator to remove.
      */
     function removeVerificator(address _to)
-    public
+    internal
     {
         (bool _isVerificator, uint s) = isVerificator(_to);
         if(_isVerificator){
@@ -150,19 +155,19 @@ contract Jobcoin is ERC20, Ownable{
         }
     }
 
-    /**
+    /*
     * @notice A method to retrieve the stake for a verificator.
-    * @param _verificator The verificator to retrieve the stake for.
+    * @param msg.sender The verificator to retrieve the stake for.
     * @return uint256 The amount of JobCoin staked.
     */
-    function stakeOf(address _verificator)
+    function stakeOf()
     public
     view
     returns(uint)
     {
-        uint reward = rewards[_verificator];
-        uint penality = penalities[_verificator];
-        return stakes[_verificator].add(reward).sub(penality);
+        (bool _isVerificator,)= isVerificator(msg.sender);
+        require(_isVerificator == true, "You are not verificator, so you don't have stake.");
+        return stakes[msg.sender];
     }
 
 
@@ -182,52 +187,53 @@ contract Jobcoin is ERC20, Ownable{
         return _totalStakes;
     }
 
+
     /*
-    * @notice A method for a verificator to create a stake.
-    * @param _stake The size of the stake to be created.
+    * User become Verificator
+    * He stakes 1000 virtual Jobcoin on the contract
+    * He are now able to judge trashtags done by Trashtag Warriors
     */
-
-
-    function becomeVerificator(address _to)
+    function becomeVerificator()
     public
     {
-        _burn(_to,verifStake); //will revert if the user tries to stake more tokens than he owns
-        if(stakes[_to] == 0) addVerificator(_to);
-        stakes[_to] = stakes[_to].add(verifStake);
+        (bool _isVerificator,) = isVerificator(msg.sender);
+        require(!_isVerificator, "You are already verificator");
+        _burn(msg.sender ,verifStake); //will revert if the user tries to stake more tokens than he owns
+        if(stakes[msg.sender] == 0) addVerificator(msg.sender);
+        stakes[msg.sender] = stakes[msg.sender].add(verifStake);
     }
 
 
 
-    //OnlyOwner function for the mainnet
-    function verificatorReward(address _verificator)public  {
+
+    //Create 10 Jobcoin on Verficators stake
+    function verificatorReward(address _verificator)internal  {
         (bool _isVerificator,) = isVerificator(_verificator);
         if(_isVerificator){
-            rewards[_verificator]= rewards[_verificator].add(rewardVerificator);
+            stakes[_verificator]= stakes[_verificator].add(rewardVerificator);
         }
     }
 
-
-    //OnlyOwner function for the mainnet
-    function verificatorPenality(address _verificator)public {
+    //Destruct 20 Jobcoin on Verficators stake
+    function verificatorPenality(address _verificator) internal {
         (bool _isVerificator, ) = isVerificator(_verificator);
         if(_isVerificator){
-            penalities[_verificator]= penalities[_verificator].add(rewardVerificator.mul(2));
+            if(stakes[_verificator]>=0){
+                stakes[_verificator]= stakes[_verificator].sub(rewardVerificator.mul(2));
+            }
         }
     }
 
 
-
-    function viewStakeVerificator()public view returns(uint){
-        uint reward = rewards[msg.sender];
-        uint penality = penalities[msg.sender];
-        return stakes[msg.sender].add(reward).sub(penality);
-    }
-
+    /*
+    * User is not able to judge Trashtag challenges anymore
+    * His Jobcoin stake is send to his CryptoWallet
+    */
     function withdrawStake()public{
-        uint actualStake = viewStakeVerificator();
+        (bool _isVerificator,) = isVerificator(msg.sender);
+        require(_isVerificator == true, "You are not a verificator, so you can't withdraw any stake");
+        uint actualStake = stakeOf();
         removeVerificator(msg.sender);
-        rewards[msg.sender] = 0;
-        penalities[msg.sender] = 0;
         stakes[msg.sender] = 0;
         _mint(msg.sender, actualStake);
     }
@@ -236,7 +242,3 @@ contract Jobcoin is ERC20, Ownable{
 
 
 }
-
-
-
-

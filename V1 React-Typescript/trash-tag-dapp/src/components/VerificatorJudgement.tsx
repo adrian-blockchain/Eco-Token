@@ -3,16 +3,25 @@ import "./VerificatorJudgement.css"
 // @ts-ignore
 import Web3 from "web3";
 // @ts-ignore
+import axios from "axios";
+// @ts-ignore
 import TrashTag from "../build/contracts/TrashtagDAPP.json";
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+const info = require("./../config.json")
+
+
 declare const window: any;
 
 export const VerificatorJudgement = ()=>{
     const [receive, setreceive] = useState<boolean>(false)
-    const [imgHash, setImgHash] = useState<string[]>([])
+    const [metadatas, setMetadatas] = useState<string>()
+    const [TTaccount, setTTaccount] = useState<string>();
+    let [positive, setPositive] = useState<number>(0);
+    let [negative, setNegative] = useState<number>(0);
     const [account, setAccount] = useState<string>('')
     const [contract, setContract] = useState<any>()
     const [loading, setLoading] =useState<boolean>(true)
-
+    const governance = new HDWalletProvider(info.privatekey, "http://localhost:7545")
 
     const componentWillAmount = async ()=>{
         if (loading == true){
@@ -25,22 +34,35 @@ export const VerificatorJudgement = ()=>{
 
     const yes = ()=>{
         const post = async ()=>{
-            console.log("yes it is a trashtag challenge")
-            await contract.methods.verificatorReward(account).send(
-                {from:account}
-            )
-            window.location.reload();
 
+            if (positive = 3){
+                console.log("yes it is a trashtag challenge")
+                await contract.methods.verificatorReward(account).send(
+                    {from:account}
+                )
+
+                /*await contract.methods.TrashtagTokenCreation(uri, account).send(
+                    {from:governance}
+                )
+                 */
+            }
+            window.location.reload();
         }
         post()
     }
 
     const no = ()=>{
         const post = async ()=>{
-            console.log("No its not a trashtag")
-            await contract.methods.verificatorPenality(account).send(
-                {from:account}
-            )
+            if (positive >10){
+                console.log("No its not a trashtag")
+                await contract.methods.verificatorPenality(account).send(
+                    {from:account}
+                )
+             //Post negative
+            }
+            else{
+                console.log("negative")
+            }
             window.location.reload();
 
         }
@@ -50,22 +72,30 @@ export const VerificatorJudgement = ()=>{
     //API doit envoyer 2 hash d'images, array of two hash
 
     const Receive = ()=>{
-        const get = async ()=>{
+        const get = async ()=> {
+            //const uri: any = await axios.get(``)
+
+            //const res: any = await axios.get(`https://ipfs.io/ipfs/${uri}`)
+
+
             console.log('Waiting for data from api')
+/*
 
+            if (res != undefined) {
+                return(
+                    <div>
+                        <img  alt="" className="trash-img1"/>
+                        <img src={`https://ipfs.io/ipfs/${imgHash2}`} alt="" className="trash-img2"/>
+                    </div>
+                )
+
+            } else {
+                return (<div><h4>Problem with reception</h4></div>)
+            }
+
+ */
         }
 
-        if (imgHash != undefined) {
-            return(
-                <div>
-                    <img src={`https://ipfs.io/ipfs/${imgHash[0]}`} alt="" className="trash-img1"/>
-                    <img src={`https://ipfs.io/ipfs/${imgHash[1]}`} alt="" className="trash-img2"/>
-                </div>
-            )
-        }
-        else {
-            return (<div><h4>Problem with reception</h4></div>)
-        }
     }
 
 
@@ -130,7 +160,8 @@ export const VerificatorJudgement = ()=>{
         {
             receive== true ? <div><h3>Loading...</h3></div>
                 :
-                <Receive/>
+                <div><h3>En attente de l'api</h3></div>
+                //<Receive/>
         }
 
 

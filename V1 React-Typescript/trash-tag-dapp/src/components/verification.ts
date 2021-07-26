@@ -1,6 +1,15 @@
 export const verification = (allMetaDataImg1:any, allMetaDataImg2:any):boolean=> {
 
     if (allMetaDataImg1.GPSLongitude !==undefined){
+        console.log(allMetaDataImg1.DateTime);
+
+        const arr1 = Array.from(allMetaDataImg1.DateTime)
+        const day11 = arr1[9]
+        const day12 = arr1[10]
+
+        //const day1 = day11.concat(day12)
+
+        //console.log(min1)
 
         const directionTolerance1: number = allMetaDataImg2.GPSImgDirection.numerator / allMetaDataImg2.GPSImgDirection.denominator - 10;
         const directionTolerance2: number = allMetaDataImg2.GPSImgDirection.numerator / allMetaDataImg2.GPSImgDirection.denominator + 10;

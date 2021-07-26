@@ -17,6 +17,8 @@
  * phrase from a file you've .gitignored so it doesn't accidentally become public.
  *
  */
+const HDWalletProvider = require('@truffle/hdwallet-provider')
+const privateKey = "0xbac56d83b73cd92c1fed5aa37c9d6dc7ac46842e4d5670e714849a1585661ae3"
 const path = require("path");
 
 // const HDWalletProvider = require('@truffle/hdwallet-provider');
@@ -24,8 +26,10 @@ const path = require("path");
 //
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
-contracts_build_directory: path.join(__dirname, "src/contracts"),
+
 module.exports = {
+  contracts_build_directory: path.join(__dirname, "src/contracts"),
+  plugins: ["truffle-contract-size"],
   /**
    * Networks define how you connect to your ethereum client and let you set the
    * defaults web3 uses to send transactions. If you don't specify one truffle
@@ -43,10 +47,21 @@ module.exports = {
     // tab if you use this network and you must also set the `host`, `port` and `network_id`
     // options below to some value.
     //
+    ethTestnet:{
+      provider:() => new HDWalletProvider(
+          privateKey,
+          'https://rinkeby.infura.io/v3/b61ae13e4e344409948e0847795b767a'
+
+      ),
+      network_id: 4, //Rinkeby
+      skipDryRun: true //should be remove for Mainnet deployement
+    },
     development: {
       host: "127.0.0.1",     // Localhost (default: none)
       port: 7545,            // Standard Ethereum port (default: none)
-      network_id: "5777",       // Any network (default: none)
+      network_id: "5777",
+      gas: 8500000,           // Gas sent with each transaction (default: ~6700000)
+      gasPrice: 20000000000,// Any network (default: none)
      },
     // Another network with more advanced options...
     // advanced: {
@@ -104,4 +119,5 @@ module.exports = {
   db: {
     enabled: false
   }
+
 };
