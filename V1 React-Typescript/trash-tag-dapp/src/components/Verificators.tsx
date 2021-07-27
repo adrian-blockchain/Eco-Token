@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import Web3 from "web3";
 
 // @ts-ignore
-import TrashTag from "../build/contracts/TrashtagDAPP.json";
+import TrashTag from "../contracts/TrashtagDAPP.json";
 import VerificatorJudgement from "./VerificatorJudgement";
 
 import "./Verificator.css";
@@ -41,10 +41,6 @@ export const Verificators = ()=>{
                 await contract.methods.withdrawStake().send(
                     {from:account}
                 )
-                let ans = await contract.methods.isVerificator(account).call(
-                    {from: account}
-                )
-                console.log(ans)
                 setWait1(false)
 
             }
@@ -68,7 +64,7 @@ export const Verificators = ()=>{
 
 
     const IsVerificator = async ()=> {
-        let ans = await contract.methods.isVerificator(account).call(
+        let ans = await contract.methods.isVerificator().call(
             {from: account}
         )
         console.log(ans)
@@ -95,7 +91,7 @@ export const Verificators = ()=>{
              */
     const Stake = ()=>{
         const load= async ()=>{
-            const value:number = await contract.methods.viewStakeVerificator().call(
+            const value:number = await contract.methods.stakeOf().call(
                 {from:account}
             )
             setStake(value)

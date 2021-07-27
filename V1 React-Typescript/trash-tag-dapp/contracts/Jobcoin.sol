@@ -121,11 +121,10 @@ contract Jobcoin is ERC20, Ownable{
     * @return bool, uint256 Whether the address is a verificator,
     * and if so its position in the verificator array.
     */
-
-    function isVerificator(address _to)internal view returns(bool res, uint s){
+    function isVerificator()public view returns(bool res, uint s){
 
         for(s=0; s< verificators.length; s+=1){
-            if(_to == verificators[s]) return(true, s);
+            if(msg.sender == verificators[s]) return(true, s);
         }
         return(false, 0);
     }
@@ -137,7 +136,7 @@ contract Jobcoin is ERC20, Ownable{
     function addVerificator(address _to)
     internal
     {
-        (bool _isVerificator, ) = isVerificator(_to);
+        (bool _isVerificator, ) = isVerificator();
         if(!_isVerificator) verificators.push(_to);
     }
 
@@ -145,10 +144,10 @@ contract Jobcoin is ERC20, Ownable{
      * @notice A method to remove a msg.sender from verificator.
      * @param  The verificator to remove.
      */
-    function removeVerificator(address _to)
+    function removeVerificator()
     internal
     {
-        (bool _isVerificator, uint s) = isVerificator(_to);
+        (bool _isVerificator, uint s) = isVerificator();
         if(_isVerificator){
             verificators[s] = verificators[verificators.length - 1];
             verificators.pop();
@@ -165,7 +164,7 @@ contract Jobcoin is ERC20, Ownable{
     view
     returns(uint)
     {
-        (bool _isVerificator,)= isVerificator(msg.sender);
+        (bool _isVerificator,)= isVerificator();
         require(_isVerificator == true, "You are not verificator, so you don't have stake.");
         return stakes[msg.sender];
     }
@@ -196,7 +195,7 @@ contract Jobcoin is ERC20, Ownable{
     function becomeVerificator()
     public
     {
-        (bool _isVerificator,) = isVerificator(msg.sender);
+        (bool _isVerificator,) = isVerificator();
         require(!_isVerificator, "You are already verificator");
         _burn(msg.sender ,verifStake); //will revert if the user tries to stake more tokens than he owns
         if(stakes[msg.sender] == 0) addVerificator(msg.sender);
@@ -208,7 +207,7 @@ contract Jobcoin is ERC20, Ownable{
 
     //Create 10 Jobcoin on Verficators stake
     function verificatorReward(address _verificator)internal  {
-        (bool _isVerificator,) = isVerificator(_verificator);
+        (bool _isVerificator,) = isVerificator();
         if(_isVerificator){
             stakes[_verificator]= stakes[_verificator].add(rewardVerificator);
         }
@@ -216,7 +215,7 @@ contract Jobcoin is ERC20, Ownable{
 
     //Destruct 20 Jobcoin on Verficators stake
     function verificatorPenality(address _verificator) internal {
-        (bool _isVerificator, ) = isVerificator(_verificator);
+        (bool _isVerificator, ) = isVerificator();
         if(_isVerificator){
             if(stakes[_verificator]>=0){
                 stakes[_verificator]= stakes[_verificator].sub(rewardVerificator.mul(2));
@@ -230,10 +229,10 @@ contract Jobcoin is ERC20, Ownable{
     * His Jobcoin stake is send to his CryptoWallet
     */
     function withdrawStake()public{
-        (bool _isVerificator,) = isVerificator(msg.sender);
+        (bool _isVerificator,) = isVerificator();
         require(_isVerificator == true, "You are not a verificator, so you can't withdraw any stake");
         uint actualStake = stakeOf();
-        removeVerificator(msg.sender);
+        removeVerificator();
         stakes[msg.sender] = 0;
         _mint(msg.sender, actualStake);
     }

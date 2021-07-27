@@ -9,8 +9,9 @@ import logo from "./components/pictures/trashtag_dapp.png"
 import './App.css';
 import {GetImage} from './components/GetImage'
 import {Navbar } from './components/Navbar';
+
 // @ts-ignore
-import TrashTag from '../src/build/contracts/TrashtagDAPP.json'
+import TrashTag from "./contracts/TrashtagDAPP.json";
 import Metamask from "./components/Metamask";
 import RinkebyIndication from "./components/RinkebyIndication";
 import Binocle from "./components/pictures/binoculars.png"
@@ -18,7 +19,8 @@ import Garbage from "./components/pictures/garbage (2).png"
 import Localisation from "./components/pictures/localisation.png"
 import Com from "./components/pictures/commaunautarian.png"
 import Watson from "./components/pictures/watson.png";
-
+import Blur from "./components/pictures/blur-picture.png";
+import TTpicture from "./components/pictures/TTpicture.png";
 
 declare const window: any;
 
@@ -38,6 +40,7 @@ Lauch
     if (set == true){
       await loadWeb3();
       await loadBlockchaindata()
+      console.log(TrashTag)
       setSet(false)
     } if (contract != undefined){
       await getBalance()
@@ -85,16 +88,17 @@ Lauch
       setAccount(accounts[0]);
       console.log(account)
       const networkId = await web3.eth.net.getId()
+      console.log(networkId);
 
+      // @ts-ignore
+      let networkData = TrashTag.networks[networkId];
+      console.log(networkData);
       const val = await web3.eth.getBalance(accounts[0]);
       const ethBal:number = Number(val);
       console.log(ethBal)
       setEthBalance(ethBal);
 
-      // @ts-ignore
-      const networkData:any = TrashTag.networks[networkId]
-
-      console.log(networkData)
+      //console.log(networkData)
       if (networkData){
         const abi =TrashTag.abi;
         const Contract =new web3.eth.Contract(abi, networkData.address)
@@ -102,7 +106,7 @@ Lauch
         console.log(contract)
       }
       else {
-        window.alert('Contract is not deployed on a detected network')
+        console.log('Contract is not deployed on a detected network')
       }
     }
 
@@ -144,7 +148,8 @@ Lauch
         </div></li>
 
         <li><h3>You need to take the most evident pictures</h3>
-        <p>Mettre 2* meme images de samedi, Natural and BLUR</p>
+        <img src={Blur}/>
+          <img src={TTpicture}/>
         </li>
 
         <li>
@@ -182,8 +187,8 @@ Lauch
         </div>
 
 
-
-        <div className="Button">
+          <h4>Don't be impatient, interactions with blockchain can take some time : )</h4>
+          <div className="Button">
         <Button variant="contained" color="default" onClick={hideAware}>OK</Button>
         </div>
 
@@ -199,6 +204,6 @@ Lauch
     </div>
 
   )
-};
+}
 
 export default App;

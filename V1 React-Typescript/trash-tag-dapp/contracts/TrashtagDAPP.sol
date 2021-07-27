@@ -26,7 +26,7 @@ contract TrashtagDAPP is  Trashtag {
 
 
     modifier IsVerificator (){
-        (bool isHe,) = Jobcoin.isVerificator(msg.sender);
+        (bool isHe,) = Jobcoin.isVerificator();
         require(isHe == true, "You are not Verificator");
         _;
     }

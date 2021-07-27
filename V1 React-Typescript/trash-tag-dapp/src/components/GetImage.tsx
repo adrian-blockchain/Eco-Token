@@ -22,15 +22,17 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
     let [imgHash, setImgHash] = useState<string[]>([])
     let [MetaDataImg1, setMetaDataImg1] = useState<any>()
     let [MetaDataImg2, setMetaDataImg2] = useState<any>()
+    const [validate, setvalidate] = useState<boolean>(false)
 
     /*
     Interface composent
      */
+
     let [debuging, setDebuging] = useState<boolean>(false)
     let [img1Done, setimg1Done] = useState<boolean>(false)
     let [loading, setLoading] = useState<number>(0)
     let [tokenCreated, setTokenCreated]= useState<boolean>(false)
-    let [click, setClick]=useState<boolean>(false)
+    let [test, setTest] = useState<boolean>(false)
 
 
     let verif:boolean = false;
@@ -111,10 +113,8 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
                     if (result[0].hash !== undefined) {
                         await setImgHash(prevState => [...prevState, result[0].hash])
 
-                    }else return
-
-
-                    if (error) {
+                    }
+                    else if (error) {
                         console.log(error)
                         return
                     }
@@ -128,12 +128,78 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
 
 
 
-    const validateNFT=async ()=>{
+    const validateTestNFT=async ()=>{
         const uri:string = await MetadataExport(MetaDataImg1, MetaDataImg2, imgHash[0], imgHash[1] )
-        await createNFT(account, contract, uri)
+        await contract.methods.NFTCreationForTest(uri, account).send(
+            {from:account}
+        )
         console.log(`https://ipfs.io/ipfs/${uri}`)
         setTokenCreated(true)
+        setTest(true)
 
+
+    }
+
+    const SendToVerificator = async ()=>{
+        const uri:string = await MetadataExport(MetaDataImg1, MetaDataImg2, imgHash[0], imgHash[1]);
+        await contract.methods.NeedToBeValidate(uri).send(
+            {from:account}
+        );
+        setTokenCreated(true)
+    }
+
+    const UploadImages = ()=>{
+        return(
+            <div className="input1">
+                <label htmlFor="img1">The first picture</label>
+                <input type='file' id="img1" onChange={captureImg1}/>
+                {
+                    img1Done == false ? <div></div>:
+
+                            <div className="input2">
+                                <label htmlFor="img2">The second picture</label>
+                                <input type='file' id="img2" onChange={captureImg2}/>
+                                <br/>
+                                <input className="btn-validate" onClick={onSubmit} value="Validate"/>
+                            </div>
+                }
+
+                {
+                    debuging == false ? <div></div>
+                        :
+                        <div><h5>Your images are invalid, they do not include metadata</h5></div>
+
+                }
+
+            </div>
+
+        )
+    }
+
+    const Result = ()=>{
+        if (test == true) {
+            return (
+                <div>
+                    <h3>Congrats !</h3>
+                    <ul>
+                        <li><p>You just receive 100 jobcoins !</p>
+                            <p>To see it in your crypto wallet, add assets and enter "address JOBCOIN contract"</p>
+                        </li>
+                        <li><p>You can see your trashtag on "My TrashTags"</p></li>
+                    </ul>
+                </div>
+            )
+        }else {
+            return (
+                <div>
+                    <h3>Your trashtag challenge has been sent to Verificators</h3>
+                    <br/>
+                    <h3>If your trashtag token is validate, you will receive an trashtag Token wich represent your ecological action</h3>
+                    <h3>And 100 JBC</h3>
+
+                </div>
+            )
+        }
     }
 
 
@@ -142,86 +208,76 @@ export const GetImage = ({account, contract}:{account:string, contract:any})=>{
     const onSubmit= async (event:any)=>{
         event.preventDefault()
         console.log("On submit")
-        setClick(true)
 
-        await ImgOnIpfs(img1);
 
-        await ImgOnIpfs(img2);
         /*
         if (MetaDataImg1 !== undefined && MetaDataImg2 !==undefined )
         verif = verification(MetaDataImg1,MetaDataImg2)
         console.log(verif)
         if (verif === true) {
 
-            await ImgOnIpfs(img1);
+         */
 
-            await ImgOnIpfs(img2);
+        await ImgOnIpfs(img1);
 
-            setDebuging(false)
+        await ImgOnIpfs(img2);
+
+        setDebuging(false)
+        setvalidate(true)
+        console.log(validate)
+        /*
         }
         else {
             setDebuging(true)
         }
 
          */
+
+
     }
 
 
     return (
         <div>
-            { tokenCreated === true?
-                <div>
-                    <h3>Congrats !</h3>
-                    <ul>
-                        <li><p>You just receive 100 jobcoins !</p>
-                        <p>To see it in your crypto wallet, add assets and enter "address JOBCOIN contract"</p>
-                        </li>
-                        <li><p>You can see your trashtag on "My TrashTags"</p></li>
-                    </ul>
-
-                </div>
-                    :
-                <div>
-                    <form onSubmit={onSubmit}>
-                        <div className="input1">
-                            <label htmlFor="img1">The first picture</label>
-                            <input  type='file' id="img1" onChange={captureImg1}  />
-                        </div>
-
-
-
-                { img1Done == false ? <div></div>
+            {tokenCreated == true ?
+                <Result/>
                 :
-                <div className="input2">
-                    <label htmlFor="img2">The second picture</label>
-                    <input type='file' id="img2" onChange={captureImg2} />
-                    <br/>
-                    {click != true ? <input className="btn-validate" type='submit' value="Validate"/>
-                        :
+                <div>
+                    {validate == true ?
                         <div>
-
-                        {imgHash[1] == undefined?
-                        <div><h3>Loading...</h3></div>
+                            {debuging == true ?
+                                <div><h5>Your images are invalid, they do not include metadata</h5></div>
                                 :
                                 <div></div>
+                            }
+
+                        {imgHash[1] == undefined ? <div id="loader" className="text-center mt-5">
+                                <h3>Loading...</h3>
+                                    <h3>Images and metadatas are uploading to ipfs</h3>
+                                </div>
+                                :
+
+                                <div className='container-rendering'>
+                                    <div>
+
+
+                                    </div>
+                                    <img src={`https://ipfs.io/ipfs/${imgHash[0]}`} alt="" className="trash-img1"/>
+                                    <img src={`https://ipfs.io/ipfs/${imgHash[1]}`} alt="" className="trash-img2"/>
+                                    <button className="btn" onClick={SendToVerificator}>Send to Verificator</button>
+                                    <button className="btn test" onClick={validateTestNFT}>Validate your Test Trashtag
+                                        Token (without verfication)
+                                    </button>
+                                </div>
                         }
                         </div>
+
+                        :
+
+                        <div>
+                            <UploadImages/>
+                        </div>
                     }
-
-                </div>
-            }
-
-        </form>
-
-        {debuging == true ? <div><h5>Your images are invalid, they do not include metadata</h5></div> : <div></div>}
-            {imgHash[1] == undefined ? <div id="loader" className="text-center mt-5"></div>
-                :
-                <div className='container-rendering'>
-                    <img src={`https://ipfs.io/ipfs/${imgHash[0]}`} alt="" className="trash-img1"/>
-                    <img src={`https://ipfs.io/ipfs/${imgHash[1]}`} alt="" className="trash-img2"/>
-                     <button className="btn" onClick={validateNFT}>Validate your nft</button>
-                </div>}
-
                 </div>
             }
         </div>

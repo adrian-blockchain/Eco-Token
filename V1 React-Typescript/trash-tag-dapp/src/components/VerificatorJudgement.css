@@ -1,11 +1,13 @@
 body{
-    display: grid;
+    display: block;
 
 }
 
 
 .btn {
     text-decoration: none;
+    display: block;
+    text-align: center;
 
     overflow: hidden;
     font-size: 1.5rem;
@@ -25,6 +27,4 @@ body{
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.no{
-    margin-left: 10%;
-}
+

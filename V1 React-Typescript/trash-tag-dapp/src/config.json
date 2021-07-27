@@ -1,4 +1,5 @@
 {
   "apiKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGVkZjg5YTk0RTIzOUZlNTIxRTM0NGZDMTM1NmExNTliNjZDNTU0YTciLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYyMTY5NzU1NTAwNCwibmFtZSI6IlRlc3QifQ.e-8LY-nAjOyElrYThLB319VG74HCoKm3d25-vBcb1no",
-  "privatekey": "0xbac56d83b73cd92c1fed5aa37c9d6dc7ac46842e4d5670e714849a1585661ae3"
+  "privatekey": "1d8c74de52cb83131e344bc6b830858ab968fde0ba36179b33985d0f2dedf94c",
+  "infuraAPI": "https://rinkeby.infura.io/v3/07fdee9bb7584b82996266b306e42376"
 }

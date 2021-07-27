@@ -2,7 +2,7 @@ import React, {useState} from "react";
 // @ts-ignore
 import Web3 from "web3";
 // @ts-ignore
-import TrashTag from "../build/contracts/TrashtagDAPP.json";
+import TrashTag from "../contracts/TrashtagDAPP.json";
 import JobCoin from  "./pictures/JOBCOIN.png";
 
 

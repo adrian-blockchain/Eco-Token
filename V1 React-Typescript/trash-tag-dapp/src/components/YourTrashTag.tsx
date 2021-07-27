@@ -2,7 +2,7 @@
 import Web3 from "web3";
 
 // @ts-ignore
-import TrashTag from "../build/contracts/TrashtagDAPP.json";
+import TrashTag from "../contracts/TrashtagDAPP.json";
 // @ts-ignore
 import React, {useEffect, useState} from "react";
 
@@ -125,7 +125,9 @@ export const YourTrashTag = ()=> {
             :
             <div>
 
-                {amountNFT == 0 ? <div><h2>You did not participate to a trashtag Challenge yet</h2></div>
+                {amountNFT == 0 ? <div><h2>No trashtag token to display yet</h2>
+                <h2>Let's do a trashtag challenge ! : )</h2>
+                </div>
                     :
                     <div>
                         <br/>
